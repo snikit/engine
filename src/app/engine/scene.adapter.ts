@@ -1,33 +1,36 @@
 import {
-  Scene,
+  FreeCamera,
+  Frustum,
   HemisphericLight,
   Light,
-  Vector3,
-  MeshBuilder,
-  Material,
-  GroundMesh,
   Mesh,
-  StandardMaterial,
-  Camera,
-  ArcRotateCamera,
+  MeshBuilder,
+  Scene,
   TargetCamera,
-  FreeCamera,
-  Color3,
-  Frustum,
+  Vector3,
+  ArcRotateCamera,
 } from 'babylonjs';
 import { EngineAdapter } from './engine.adapter';
+import { PlanBuilder } from './builders/plan.builder';
 
 export class SceneAdapter {
   private scene: Scene;
   private light: Light;
   private ground: Mesh;
   private camera: TargetCamera;
+  private planBuilder: PlanBuilder;
 
   constructor(private engine: EngineAdapter) {
     this.scene = new Scene(this.engine.getEngine());
+    this.planBuilder = new PlanBuilder(this.scene);
   }
 
   addTestStuff() {
+    this.planBuilder.addDemoMesh();
+
+    //return this;
+
+    // later
     const frustumPlanes = Frustum.GetPlanes(this.scene.getTransformMatrix());
 
     let isInFrustum = true;
@@ -68,14 +71,22 @@ export class SceneAdapter {
   }
 
   setCamera() {
-    this.camera = new FreeCamera(
-      'camera1',
-      new Vector3(0, 10, -10),
+    // this.camera = new FreeCamera(
+    //   'camera1',
+    //   new Vector3(0, 10, -10),
+    //   this.scene
+    // );
+
+    this.camera = new ArcRotateCamera(
+      'Camera',
+      -Math.PI / 2,
+      Math.PI / 3,
+      25,
+      new Vector3(0, 0, 4.5),
       this.scene
     );
 
-    this.camera.setTarget(Vector3.Zero());
-
+    //this.camera.setTarget(Vector3.Zero());
 
     return this;
   }
@@ -83,7 +94,7 @@ export class SceneAdapter {
   addLight() {
     this.light = new HemisphericLight(
       'light1',
-      new Vector3(0, 1, 0),
+      new Vector3(5, 10, 0),
       this.scene
     );
 
@@ -93,7 +104,7 @@ export class SceneAdapter {
   }
 
   addGround() {
-    this.ground = Mesh.CreateGround('ground', 6, 6, 2, this.scene);
+  //  this.ground = Mesh.CreateGround('ground', 6, 6, 2, this.scene);
 
     // const material = new StandardMaterial('groundMaterial', this.scene);
     // material.alpha = 1;

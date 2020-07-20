@@ -17,7 +17,9 @@ export class EngineService {
 
   public init(canvas: ElementRef<HTMLCanvasElement>): void {
     this.canvasAdapter = new CanvasAdapter(canvas.nativeElement);
+
     this.engineAdapter = new EngineAdapter(this.canvasAdapter);
+
     this.sceneAdapter = new SceneAdapter(this.engineAdapter)
       .setCamera()
       .addLight()
